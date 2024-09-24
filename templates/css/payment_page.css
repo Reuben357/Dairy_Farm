@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;900&display=swap');
+
+*{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    scroll-padding-top: 2rem;
+    scroll-behavior: smooth;
+}
+
+/* Variables */
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+}
+
+/* Scroll bar */
+::-webkit-scrollbar{
+    width: 14px;
+}
+::-webkit-scrollbar-track{
+    background-color: #fff;
+}
+::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background: var(--main-light-color);
+    border: 3px solid #ffffff;
+}
+
+/*Payment*/
+.payment{
+    max-width: 1500px;
+    margin: auto;
+    min-height: 640px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--container-color);
+}
+
+.payment-container{
+    max-width: 700px;
+    width: 100%;
+    padding: 25px 30px;
+    align-items: center;
+}
+
+.btn-groups{
+    margin-top: 22px;
+}
+.btn-groups input       {
+    display: inline-block;
+    font-size: 16px;
+    padding: 13px 26px;
+    color: var(--bg-color);
+    cursor: pointer;
+    font-weight: 400;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.payment-btn{
+    background-color: #a8a62d;
+    border: 2px solid #a8a62d;
+    margin-right: 8px;
+}
+
+.payment-btn:hover{
+    background-color: #fff;
+    color: #a8a62d;
+}
+
+/*Orders*/
+.orders {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.orders h4{
+    text-align: center;
+    margin: 20px;
+}
+
+.orders table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.orders .product-info{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.orders th{
+    text-align: left;
+    padding: 5px 10px;
+    color: var(--bg-color);
+    background-color: var(--main-color);
+}
+
+.orders td{
+    padding: 10px 20px;
+}
+
+.orders td img{
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
