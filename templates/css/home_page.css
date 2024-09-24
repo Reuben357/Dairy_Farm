@@ -75,3 +75,54 @@ h1 {
 .add-to-cart:hover {
     background-color: coral;
 }
+
+
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #a8a62d;
+    padding: 1rem;
+}
+
+.navbar h3 {
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    gap: 1rem;
+}
+
+.navbar li {
+    padding: 0.5rem 0;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover {
+    color: #ffd700;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .navbar ul {
+        flex-direction: column;
+    }
+}
