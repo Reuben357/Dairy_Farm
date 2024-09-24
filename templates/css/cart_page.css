@@ -1,0 +1,127 @@
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+    --yellow-color: #ffff00;
+    --orange-color: #ffa500;
+    --red-color: #ff0000;
+    --blue-color: #00d3ef;
+}
+
+.cart .container{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    padding-top: 3rem;
+}
+
+
+.cart table{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 3rem;
+    padding-top: 3rem;
+}
+
+.cart-info{
+    display: flex;
+    flex-wrap: wrap;
+
+}
+
+/* columns of the table */
+.cart th{
+    text-align: left;
+    padding: 5px 10px;
+    color: var(--text-color);
+    background-color: var(--main-color);
+}
+
+.cart td{
+    padding: 10px 20px;
+}
+
+.cart td img{
+    width: 80px;
+    height: 80px;
+    margin-right: 10px;
+}
+
+.cart td input{
+    width: 40px;
+    height: 30px;
+    padding: 5px;
+}
+
+.cart td a {
+    color: var(--main-color);
+
+}
+
+.cart .remove-btn{
+    color: var(--main-color);
+    text-decoration: none !important;
+    font-size: 15px;
+    border: none;
+    width: auto;
+    background-color: var(--bg-color);
+
+}
+
+.cart .edit-btn{
+    color: var(--main-color);
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    width: auto;
+    background-color: var(--bg-color);
+}
+
+.cart .cart-info p{
+    margin: 3px;
+}
+
+.cart-total{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.cart-total table{
+    width: 100%;
+    max-width: 500px;
+    border-top: 3px solid var(--main-color);
+}
+
+td:last-child{
+    text-align: right;
+}
+
+th:last-child{
+    text-align: right;
+}
+.checkout-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.checkout-container button{
+    font-size: 16px;
+    padding: 13px 26px;
+    color: var(--bg-color);
+    cursor: pointer;
+    font-weight: 400;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.checkout-btn{
+    padding: 13px 26px;
+    background-color: #a8a62d;
+    border: 2px solid #a8a62d;
+}
+
+.checkout-btn:hover{
+    background-color: #fff;
+    color: #a8a62d;
+}
