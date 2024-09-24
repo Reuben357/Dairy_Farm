@@ -8,6 +8,7 @@
     --orange-color: #ffa500;
     --red-color: #ff0000;
     --blue-color: #00d3ef;
+    --hover-color:#a8a62d;
 }
 
 .cart .container{
@@ -49,7 +50,7 @@
 }
 
 .cart td input{
-    width: 40px;
+    width: 60px;
     height: 30px;
     padding: 5px;
 }
@@ -119,9 +120,10 @@ th:last-child{
     padding: 13px 26px;
     background-color: #a8a62d;
     border: 2px solid #a8a62d;
+    border-radius: 0.5rem;
 }
 
 .checkout-btn:hover{
     background-color: #fff;
-    color: #a8a62d;
+    color: var(--hover-color);
 }
