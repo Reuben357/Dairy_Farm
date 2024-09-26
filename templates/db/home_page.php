@@ -25,7 +25,7 @@ $result = $conn->query($sql);
         <h3>Home</h3>
         <ul>
             <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact Me</a></li>
+            <li><a href="contactme_page.html">Contact Me</a></li>
             <li><a href="categories_page.php">Categories</a></li>
             <li><a href="products.html">Products</a></li>
         </ul>
