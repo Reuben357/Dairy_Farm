@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if ($stmt->execute()) {
             $success_message = "Sign-up successful. Please sign in.";
-            header("Refresh: 3; URL=signin.php");
+            header("Refresh: 1; URL=signin.php");
         } else {
             $error_message = "Error: " . $stmt->error;
         }
