@@ -1,3 +1,16 @@
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+    --yellow-color: #ffff00;
+    --orange-color: #ffa500;
+    --red-color: #ff0000;
+    --blue-color: #00d3ef;
+    --green-color: #14ef00;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -7,6 +20,19 @@ body {
     margin: 0;
     background-color: #f4f4f4;
 }
+
+.error-msg{
+    color: var(--red-color);
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
+.success-msg{
+    color: var(--green-color);
+    font-weight: 400;
+    margin-bottom: 2rem;
+}
+
 form {
     background: white;
     padding: 20px;
