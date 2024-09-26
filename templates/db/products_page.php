@@ -56,7 +56,7 @@ $conn->close();
             </div>
             <div class="product-info">
                 <h3 class="product_name"><?php echo $product['name']; ?></h3>
-                <h5 class="product_price">Ksh <?php echo $product['price']; ?>/=</h5>
+                <h5 class="product_price">$<?php echo $product['price']; ?>/=</h5>
                 <p class="product_desc"><?php echo $product['description']; ?></p>
                 <form action="">
                     <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">

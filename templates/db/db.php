@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "Trubel_@!";
 $dbname = "dairy_products_db";
 
 // Create connection
