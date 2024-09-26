@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "Trubel_@!";
+$password = "";
 $dbname = "dairy_products_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -62,19 +62,26 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" type="text/css" href="/templates/css/signup_page.css">
+    <link rel="stylesheet" type="text/css" href="../css/signup_page.css">
 </head>
 <body>
-    <?php
-    if (!empty($error_message)) {
-        echo "<p style='color: red;'>$error_message</p>";
-    }
-    if (!empty($success_message)) {
-        echo "<p style='color: green;'>$success_message</p>";
-    }
-    ?>
     <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <h2>Sign Up</h2>
+        <h4 class="error-msg">
+            <?php 
+            if(!empty($error_message)){
+                echo "<i class='bx bx-error bx-sm'></i>"."$error_message";
+            } 
+            ?>
+        </h4>
+
+        <h4 class="success-msg">
+            <?php 
+            if(!empty($success_message)){
+                echo "<i class='bx bx-success bx-sm'></i>"."$success_message";
+            }
+            ?>
+        </h4>
         <input type="text" name="first_name" placeholder="First Name" required>
         <input type="text" name="last_name" placeholder="Last Name" required>
         <input type="email" name="email" placeholder="Email" required>
