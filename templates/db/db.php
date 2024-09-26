@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "root";
-$password = "Trubel_@!";
+$password = "";
 $dbname = "dairy_products_db";
 
 // Create connection
@@ -142,4 +142,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signin'])) {
 }
 
 $conn->close();
+
 ?>
