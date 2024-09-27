@@ -1,90 +1,57 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "dairy_products_db";
+require_once 'db.php';
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+session_start();
 
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$error_message = "";
-$success_message = "";
+$message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
 
     if (empty($email) || empty($password)) {
-        $error_message = "Both email and password are required.";
+        $message = "Both email and password are required.";
     } else {
-        // Check for admin credentials
-        if ($email === "admin@admin.com" && $password === "Admin123#@!") {
-            $_SESSION['admin_id'] = true; // Set admin session
-            $success_message = "Admin sign-in successful. Redirecting to admin dashboard...";
-            header("Refresh: 1; URL=dashboard.php");
-        } else {
-            // Regular user login process
-            $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
-            $stmt->bind_param("s", $email);
-            $stmt->execute();
-            $result = $stmt->get_result();
+        $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-            if ($result->num_rows == 1) {
-                $user = $result->fetch_assoc();
-                if (password_verify($password, $user['password'])) {
-                    $_SESSION['user_id'] = $user['id'];
-                    $_SESSION['user_role'] = $user['role'];
-                    $success_message = "Sign-in successful. Redirecting to homepage...";
-                    header("Refresh: 1; URL=home_page.php");
-                } else {
-                    $error_message = "Invalid email or password.";
-                }
+        if ($result->num_rows == 1) {
+            $user = $result->fetch_assoc();
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_role'] = $user['role'];
+                $message = "Sign-in successful.";
+                // Redirect to home page
+                header("Location: home_page.php");
+                exit();
             } else {
-                $error_message = "Invalid email or password.";
+                $message = "Invalid email or password.";
             }
-            $stmt->close();
+        } else {
+            $message = "Invalid email or password.";
         }
+        $stmt->close();
     }
 }
-
-$conn->close();
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
-    <link rel="stylesheet" href="../css/signin_page.css">
+    <link rel="stylesheet" href="path/to/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/template/css/signin_page.css">
 </head>
 <body>
-    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-        <h2>Sign In</h2>
-        <h4 class="error-msg">
-            <?php 
-            if(!empty($error_message)){
-                echo "<i class='bx bx-error bx-sm'></i>"."$error_message";
-            } 
-            ?>
-        </h4>
-
-        <h4 class="success-msg">
-            <?php 
-            if(!empty($success_message)){
-                echo "<i class='bx bx-success bx-sm'></i>"."$success_message";
-            }
-            ?>
-        </h4>
+    <h1>Sign In</h1>
+    <form method="POST">
         <input type="email" name="email" placeholder="Email" required>
         <input type="password" name="password" placeholder="Password" required>
         <button type="submit">Sign In</button>
-        <div class="signup-link">
-            <p>If you don't have an account, <a href="signup.php">Sign Up</a></p>
-        </div>
     </form>
+    <p><?php echo $message; ?></p>
 </body>
 </html>
