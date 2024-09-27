@@ -1,30 +1,46 @@
 <?php
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-
 // Database configuration
-$servername = "localhost";
-$username = "root";
-$password = "Trubel_@!";
-$dbname = "dairy_products_db";
+$host = 'localhost';
+$dbname = 'dairy_products_db';
+$username = 'root';
+$password = 'Trubel_@!';
 
 // Create connection
-$conn = new mysqli($servername, $username, $password);
+$conn = new mysqli($host, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Create database if it doesn't exist
-$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
-if ($conn->query($sql) !== TRUE) {
-    die("Error creating database: " . $conn->error);
-}
+// Create users table if it doesn't exist
+$sql = "CREATE TABLE IF NOT EXISTS users (
+    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('user', 'admin') DEFAULT 'user',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
 
-// Select the database
-$conn->select_db($dbname);
+if ($conn->query($sql) === FALSE) {
+    die("Error creating table: " . $conn->error);
+}
+// Create contact_messages table
+$sql = "CREATE TABLE IF NOT EXISTS contact_messages (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(6) UNSIGNED,
+    name VARCHAR(60) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+)";
+
+if ($conn->query($sql) !== TRUE) {
+    die("Error creating contact_messages table: " . $conn->error);
+}
 
 // Create products table
 $sql = "CREATE TABLE IF NOT EXISTS products (
@@ -43,160 +59,9 @@ if ($conn->query($sql) !== TRUE) {
     die("Error creating products table: " . $conn->error);
 }
 
-// Create users table
-$sql = "CREATE TABLE IF NOT EXISTS users (
-    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    first_name VARCHAR(30) NOT NULL,
-    last_name VARCHAR(30) NOT NULL,
-    email VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)";
-
-if ($conn->query($sql) !== TRUE) {
-    die("Error creating users table: " . $conn->error);
+// Function to get database connection
+function getDbConnection() {
+    global $conn;
+    return $conn;
 }
-
-// Create contact_messages table
-$sql = "CREATE TABLE IF NOT EXISTS contact_messages (
-    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id INT(6) UNSIGNED,
-    name VARCHAR(60) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
-)";
-
-if ($conn->query($sql) !== TRUE) {
-    die("Error creating contact_messages table: " . $conn->error);
-}
-
-// Function to validate password strength
-function is_password_strong($password) {
-    return (strlen($password) >= 8 &&
-            preg_match('/[A-Z]/', $password) &&
-            preg_match('/[a-z]/', $password) &&
-            preg_match('/[0-9]/', $password) &&
-            preg_match('/[^A-Za-z0-9]/', $password));
-}
-
-// Handle sign-up logic
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
-    $first_name = trim($_POST['first_name']);
-    $last_name = trim($_POST['last_name']);
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    $errors = [];
-
-    if (empty($first_name) || empty($last_name) || empty($email) || empty($password) || empty($confirm_password)) {
-        $errors[] = "All fields are required.";
-    }
-
-    if (!preg_match("/^[a-zA-Z ]*$/", $first_name) || !preg_match("/^[a-zA-Z ]*$/", $last_name)) {
-        $errors[] = "Name should only contain letters and spaces.";
-    }
-
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email format.";
-    }
-
-    if (!is_password_strong($password)) {
-        $errors[] = "Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.";
-    }
-
-    if ($password !== $confirm_password) {
-        $errors[] = "Passwords do not match.";
-    }
-
-    if (empty($errors)) {
-        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $first_name, $last_name, $email, $hashed_password);
-
-        if ($stmt->execute()) {
-            // Redirect to sign-in page
-            header("Location: /templates/db/signin.php");
-            exit();
-        } else {
-            die("Error: " . $stmt->error);
-        }
-        $stmt->close();
-    } else {
-        foreach ($errors as $error) {
-            echo $error . "<br>";
-        }
-    }
-}
-
-// Handle sign-in logic
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signin'])) {
-    $email = trim($_POST['email']);
-    $password = $_POST['password'];
-
-    if (empty($email) || empty($password)) {
-        echo "Both email and password are required.";
-    } else {
-        $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
-                // Start session and set user ID and role
-                session_start();
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_role'] = $user['role'];
-                // Redirect based on user role
-                if ($user['role'] == 'admin') {
-                    header("Location: /admin/dashboard.php");
-                } else {
-                    header("Location: /templates/html/homepage.html");
-                }
-                exit();
-            } else {
-                echo "Invalid email or password.";
-            }
-        } else {
-            echo "Invalid email or password.";
-        }
-        $stmt->close();
-    }
-}
-
-// Create initial admin user if not exists
-$admin_email = "admin@admin.com";
-$admin_password = "Admin123#@!";
-
-$stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-$stmt->bind_param("s", $admin_email);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows == 0) {
-    $hashed_password = password_hash($admin_password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
-    
-    $first_name = "Admin";
-    $last_name = "User";
-    $role = "admin";
-    
-    $stmt->bind_param("sssss", $first_name, $last_name, $admin_email, $hashed_password, $role);
-    
-    if ($stmt->execute()) {
-        echo "Admin user created successfully.<br>";
-    } else {
-        echo "Error creating admin user: " . $stmt->error . "<br>";
-    }
-}
-
-$stmt->close();
-$conn->close();
-
 ?>
