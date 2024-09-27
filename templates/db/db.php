@@ -4,6 +4,10 @@ $host = 'localhost';
 $dbname = 'dairy_products_db';
 $username = 'root';
 $password = 'Trubel_@!';
+$servername = 'localhost';
+$dbname = 'dairy_products_db';
+$username = 'root';
+$password = '';
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);

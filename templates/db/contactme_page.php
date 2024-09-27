@@ -3,7 +3,7 @@ session_start();
 
 $servername = "localhost";
 $username = "root";
-$password = "Trubel_@!";
+$password = "";
 $dbname = "dairy_products_db";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

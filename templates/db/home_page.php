@@ -105,7 +105,7 @@ $berry = $conn->query($strawberry);
                 </div>
                 <?php 
                 if($berry->num_rows > 0) {
-                    while($row = $berry->fetch_assoc()){
+                    while($row = $berry->fetch_assoc()){ 
                     echo "<img src='" .$row["image_url"] ."' alt='" . $row["name"] . "'>";
                     }
                 }
@@ -114,6 +114,8 @@ $berry = $conn->query($strawberry);
             </div>
           </div>
       </section>
+
+      
 
       <!-- Shop -->
        <section class="shop" id="shop">
@@ -126,6 +128,7 @@ $berry = $conn->query($strawberry);
         <?php while($row= $shop_products->fetch_assoc()){ ?>
             <div class="box">
             <img src="<?php echo $row['image_url']; ?>" alt="product_image">
+            <img src="../images/<?php echo $row['image_url']; ?>" alt="product_image">
             <h2> <?php echo $row['name']; ?></h2>
             <span><?php echo $row['price']; ?></span>
             <a href="<?php echo "products_page.php?id=". $row['id']; ?>"><i class="bx bxs-cart-alt"></i></a>
