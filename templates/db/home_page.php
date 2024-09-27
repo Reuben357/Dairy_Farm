@@ -7,8 +7,14 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT * FROM products LIMIT 6";
+$sql = "SELECT * FROM products";
 $result = $conn->query($sql);
+
+$stmt = "SELECT * FROM products LIMIT 6";
+$shop_products = $conn->query($stmt);
+
+$strawberry = "SELECT * FROM products WHERE name='Strawberry'";
+$berry = $conn->query($strawberry);
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +22,7 @@ $result = $conn->query($sql);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+    <title>Home</title>
     <link rel="stylesheet" href="../css/home_page.css">
 
     <!-- Box Icons -->
@@ -42,14 +48,15 @@ $result = $conn->query($sql);
         <ul class="navbar">
             <li><a href="home_page.php" class="active">Home</a></li>
             <li><a href="#featured">Featured</a></li>
-            <li><a href="#shop">Shop</a></li>
             <li><a href="#new">New</a></li>
-            <li><a href="category_page.php">Categories</a></li>
+            <li><a href="categories_page.php">Categories</a></li>
+            <li><a href="contactme_page.php">Contact Me</a></li>
 
         </ul>
 
         <!-- Icons -->
         <div class="nav-icons">
+            <!-- Create an accounts page -->
             <a href="account_page.php" class="user"><i class="bx bxs-user"></i></a>
             <a href="cart_page.php" class="navbar-cart" id="cartPage"><i class="bx bxs-cart"></i></a>
             <i class="bx bx-menu" id="menu-icon"></i>
@@ -66,7 +73,7 @@ $result = $conn->query($sql);
                 <p>Your one-stop shop for all your animal needs. Find a wide variety of quality animal products, from feed and supplies to health care and accessories. Discover the latest information on animal health and well-being. Buy and sell with confidence on our trusted platform.</p>
 
                 <!-- Home Button -->
-                 <a href="category_page.php" class="shop-btn">Shop Now </a>
+                 <a href="categories_page.php" class="shop-btn">Shop Now </a>
             </div>
 
             <!-- Home image -->
@@ -98,7 +105,14 @@ $result = $conn->query($sql);
                     <h2>20% Discount <br>On a KG</h2>
                     <a href="#">View More</a>
                 </div>
-                <img src="../images/cheese.jpeg" alt="">
+                <?php 
+                if($berry->num_rows > 0) {
+                    while($row = $berry->fetch_assoc()){
+                    echo "<img src='" .$row["image_url"] ."' alt='" . $row["name"] . "'>";
+                    }
+                }
+                ?>
+                <!-- <img src="../images/cheese.jpeg" alt=""> -->
             </div>
           </div>
       </section>
@@ -111,30 +125,14 @@ $result = $conn->query($sql);
 
         <!-- Shop Content -->
        <div class="shop-container container">
-
-        <!-- TODO: Add an include for the get_products function -->
-
-        <div class="box">
-            <img src="../images/cheese.jpeg" alt="">
-            <h2>Cheese</h2>
-            <span>Ksh 200/=</span>
-            <a href=""><i class="bx bxs-cart-alt"></i></a>
+        <?php while($row= $shop_products->fetch_assoc()){ ?>
+            <div class="box">
+            <img src="/images/<?php echo $row['image_url']; ?>" alt="product_image">
+            <h2> <?php echo $row['name']; ?></h2>
+            <span><?php echo $row['price']; ?></span>
+            <a href="<?php echo "products_page.php?id=". $row['id']; ?>"><i class="bx bxs-cart-alt"></i></a>
         </div>
-
-        <div class="box">
-            <img src="../images/milk.jpeg" alt="">
-            <h2>Cheese</h2>
-            <span>Ksh 200/=</span>
-            <a href=""><i class="bx bxs-cart-alt"></i></a>
-        </div>
-
-        <div class="box">
-            <img src="../images/yoghurt.jpeg" alt="">
-            <h2>Cheese</h2>
-            <span>Ksh 200/=</span>
-            <a href=""><i class="bx bxs-cart-alt"></i></a>
-        </div>
-
+        <?php } ?>
 
        </section>
 
@@ -148,15 +146,15 @@ $result = $conn->query($sql);
             <!-- Shop Content -->
              <div class="shop-container container">
                 <div class="box">
-                    <img src="../images/cheese.jpeg" alt="">
-                    <h2>Cheese</h2>
+                    <img src="../images/watermelon.png" alt="">
+                    <h2>Watermelon</h2>
                     <span>Ksh 800/=</span>
                     <a href="#"><i class="bx bxs-cart-alt"></i></a>
                 </div>
 
                 <div class="box">
-                    <img src="../images/cheese.jpeg" alt="">
-                    <h2>Cheese</h2>
+                    <img src="../images/strawberry.png" alt="">
+                    <h2>Strawberry </h2>
                     <span>Ksh 800/=</span>
                     <a href="#"><i class="bx bxs-cart-alt"></i></a>
                 </div>

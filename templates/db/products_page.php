@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'db.php';
 
 // Create connection
@@ -9,24 +10,69 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Get product ID from URL
-$id = isset($_GET['id']) ? $_GET['id'] : 1;
+// Fetch all products
+$sql = "SELECT * FROM products";
+$result = $conn->query($sql);
+$all_products = $result->fetch_all(MYSQLI_ASSOC);
 
-// Fetch product
+// Get product ID from URL or use the first product
+$id = isset($_GET['id']) ? $_GET['id'] : $all_products[0]['id'];
+
+// Fetch selected product
 $sql = "SELECT * FROM products WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();
 $result = $stmt->get_result();
-$product = $result->fetch_assoc();
+$selected_product = $result->fetch_assoc();
 
-// Fetch similar products
-$sql = "SELECT * FROM products WHERE id != ? LIMIT 4";
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$similar_products = $stmt->get_result();
-
+// Handle add to cart action
+if (isset($_POST['add_to_cart'])) {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['product_quantity'];
+    
+    // Fetch product details from database
+    $sql = "SELECT * FROM products WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $product_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $product = $result->fetch_assoc();
+    
+    // Create cart item
+    $cart_item = [
+        'id' => $product['id'],
+        'name' => $product['name'],
+        'price' => $product['price'],
+        'quantity' => $quantity,
+        'image_url' => $product['image_url']
+    ];
+    
+    // Add to cart
+    if (!isset($_SESSION['cart'])) {
+        $_SESSION['cart'] = [];
+    }
+    
+    // Check if product already exists in cart
+    $product_exists = false;
+    foreach ($_SESSION['cart'] as &$item) {
+        if ($item['id'] == $product_id) {
+            $item['quantity'] += $quantity;
+            $product_exists = true;
+            break;
+        }
+    }
+    
+    // If product doesn't exist in cart, add it
+    if (!$product_exists) {
+        $_SESSION['cart'][] = $cart_item;
+    }
+    
+    // Redirect to cart page
+    header("Location: cart_page.php");
+    exit();
+}
+    
 $conn->close();
 ?>
 
@@ -35,34 +81,25 @@ $conn->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $product['name']; ?></title>
+    <title>Homepage - <?php echo $selected_product['name']; ?></title>
     <link rel="stylesheet" href="../css/products_page.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+    <link rel="stylesheet" type="text/css" href="products_page.css">
 </head>
 <body>
     <section class="product">
         <div class="product-container">
             <div class="product-image">
-                <img id="product-img" src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>">
-                <div class="similar-products">
-                    <?php
-                    while ($similar = $similar_products->fetch_assoc()) {
-                        echo "<img src='" . $similar['image_url'] . "' alt='" . $similar['name'] . "' class='thumbnail'>";
-                    }
-                    ?>
-                </div>
+                <img id="product-img" src="<?php echo $selected_product['image_url']; ?>" alt="<?php echo $selected_product['name']; ?>">
             </div>
             <div class="product-info">
-                <h3 class="product_name"><?php echo $product['name']; ?></h3>
-                <h5 class="product_price">$<?php echo $product['price']; ?>/=</h5>
-                <p class="product_desc"><?php echo $product['description']; ?></p>
-                <form action="">
-                    <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                    <input type="hidden" name="product_image" value="<?php echo $product['image_url']; ?>">
-                    <input type="hidden" name="product_name" value="<?php echo $product['name']; ?>">
-                    <input type="hidden" name="product_price" value="<?php echo $product['price']; ?>">
+                <h3 class="product_name"><?php echo $selected_product['name']; ?></h3>
+                <h5 class="product_price">Ksh <?php echo $selected_product['price']; ?>/=</h5>
+                <p class="product_desc"><?php echo $selected_product['description']; ?></p>
+                <form method="POST" action="">
+                    <input type="hidden" name="product_id" value="<?php echo $selected_product['id']; ?>">
                     <div class="product-quantity">
                         <input type="number" name="product_quantity" value="1" min="1"> Quantity
                     </div>
@@ -80,6 +117,22 @@ $conn->close();
             </div>
         </div>
     </section>
+
+    <section class="all-products">
+        <h2>All Products</h2>
+        <div class="product-grid">
+            <?php foreach ($all_products as $product): ?>
+                <div class="product-item">
+                    <a href="?id=<?php echo $product['id']; ?>">
+                        <img src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>">
+                        <h4><?php echo $product['name']; ?></h4>
+                        <p>Ksh <?php echo $product['price']; ?>/=</p>
+                    </a>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </section>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
