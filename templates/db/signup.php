@@ -1,5 +1,6 @@
 <?php
-require_once 'db.php'; // Ensure this file is in the correct location
+require_once 'db.php';
+session_start();
 
 $message = '';
 
@@ -12,6 +13,11 @@ function is_password_strong($password) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // CSRF protection
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        die("CSRF token validation failed");
+    }
+
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
     $email = trim($_POST['email']);
@@ -28,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif ($password !== $confirm_password) {
         $message = "Passwords do not match.";
     } else {
-        // All validation passed, proceed with database insertion
+        $conn = getDbConnection();
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         
         $sql = "INSERT INTO users (first_name, last_name, email, password) VALUES (?, ?, ?, ?)";
@@ -38,9 +44,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bind_param("ssss", $first_name, $last_name, $email, $hashed_password);
             
             if ($stmt->execute()) {
-                // Successful registration
                 $message = "Sign-up successful. Redirecting to sign-in page...";
-                header("Refresh: 2; URL=signin.php"); // Redirect after 2 seconds
+                header("Refresh: 2; URL=signin.php");
                 exit();
             } else {
                 $message = "Error: " . $stmt->error;
@@ -51,6 +56,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+// Generate CSRF token
+$_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 
 <!DOCTYPE html>
@@ -60,14 +68,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/signup_page.css">
 </head>
 <body>
     <div class="container mt-5">
         <h1 class="mb-4">Sign Up</h1>
         <?php if (!empty($message)): ?>
-            <div class="alert alert-info"><?php echo $message; ?></div>
+            <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
         <?php endif; ?>
-        <form method="POST">
+        <form method="POST" id="signup-form">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="form-group">
                 <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
             </div>
@@ -78,7 +88,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="email" class="form-control" name="email" placeholder="Email" required>
             </div>
             <div class="form-group">
-                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
                 <small class="form-text text-muted">Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.</small>
             </div>
             <div class="form-group">
@@ -89,13 +99,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-    document.querySelector('form').addEventListener('submit', function(e) {
-        var password = document.querySelector('input[name="password"]').value;
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+        var password = document.getElementById('password').value;
         var confirmPassword = document.querySelector('input[name="confirm_password"]').value;
 
         if (password !== confirmPassword) {
             e.preventDefault();
             alert('Passwords do not match');
+        }
+
+        // Client-side password strength check
+        var strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9])(?=.{8,})/.test(password);
+        if (!strongPassword) {
+            e.preventDefault();
+            alert('Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.');
         }
     });
     </script>
