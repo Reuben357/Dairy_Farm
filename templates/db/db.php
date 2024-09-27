@@ -13,6 +13,15 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+// Create database if it doesn't exist
+$sql = "CREATE DATABASE IF NOT EXISTS $dbname";
+if ($conn->query($sql) !== TRUE) {
+    die("Error creating database: " . $conn->error);
+}
+
+// Select the database
+$conn->select_db($dbname);
+
 // Create users table if it doesn't exist
 $sql = "CREATE TABLE IF NOT EXISTS users (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -27,6 +36,39 @@ $sql = "CREATE TABLE IF NOT EXISTS users (
 if ($conn->query($sql) === FALSE) {
     die("Error creating table: " . $conn->error);
 }
+
+// Create products table
+$sql = "CREATE TABLE IF NOT EXISTS products (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    description TEXT,
+    image_url VARCHAR(255),
+    category ENUM('dairy', 'beef', 'agricultural') NOT NULL,
+    quantity INT UNSIGNED NOT NULL DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+
+if ($conn->query($sql) !== TRUE) {
+    die("Error creating products table: " . $conn->error);
+}
+
+// Create contact_messages table
+$sql = "CREATE TABLE IF NOT EXISTS contact_messages (
+    id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id INT(6) UNSIGNED,
+    name VARCHAR(60) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    message TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+)";
+
+if ($conn->query($sql) !== TRUE) {
+    die("Error creating contact_messages table: " . $conn->error);
+}
+
 
 // Function to get database connection
 function getDbConnection() {

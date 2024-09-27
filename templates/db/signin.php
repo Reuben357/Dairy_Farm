@@ -16,28 +16,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($email) || empty($password)) {
         $message = "Both email and password are required.";
     } else {
-        $conn = getDbConnection();
-        $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // Check for admin login
+        if ($email === 'admin@admin.com' && $password === 'Admin123@!') {
+            $_SESSION['user_id'] = 'admin';
+            $_SESSION['user_role'] = 'admin';
+            header("Location: admin_dashboard.php");
+            exit();
+        } else {
+            $conn = getDbConnection();
+            $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_role'] = $user['role'];
-                $message = "Sign-in successful.";
-                // Redirect to home page
-                header("Location: home_page.php");
-                exit();
+            if ($result->num_rows == 1) {
+                $user = $result->fetch_assoc();
+                if (password_verify($password, $user['password'])) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_role'] = $user['role'];
+                    $message = "Sign-in successful.";
+                    // Redirect to home page
+                    header("Location: home_page.php");
+                    exit();
+                } else {
+                    $message = "Invalid email or password.";
+                }
             } else {
                 $message = "Invalid email or password.";
             }
-        } else {
-            $message = "Invalid email or password.";
+            $stmt->close();
         }
-        $stmt->close();
     }
 }
 

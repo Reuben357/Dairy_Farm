@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once 'db.php'; // Make sure this file exists and contains the database connection logic
 
 // Calculate total
 $total = 0;
@@ -19,15 +20,43 @@ if (isset($_POST['pay'])) {
     $payment_successful = true;
     
     if ($payment_successful) {
-        // Clear the cart
-        unset($_SESSION['cart']);
+        $conn = getDbConnection();
         
-        // Display success message
-        $success_message = "Thank you for buying from us! A payment request of Ksh $total has been sent to $phone_number. Please complete the payment on your M-Pesa mobile app.";
+        // Start transaction
+        $conn->begin_transaction();
+        
+        try {
+            // Update product quantities in the database
+            foreach ($_SESSION['cart'] as $item) {
+                $stmt = $conn->prepare("UPDATE products SET quantity = quantity - ? WHERE id = ?");
+                $stmt->bind_param("ii", $item['quantity'], $item['id']);
+                $stmt->execute();
+                
+                if ($stmt->affected_rows == 0) {
+                    throw new Exception("Failed to update quantity for product ID: " . $item['id']);
+                }
+            }
+            
+            // If we get here, it means all updates were successful
+            $conn->commit();
+            
+            // Clear the cart
+            unset($_SESSION['cart']);
+            
+            // Display success message
+            $success_message = "Thank you for buying from us! A payment request of Ksh $total has been sent to $phone_number. Please complete the payment on your M-Pesa mobile app.";
+        } catch (Exception $e) {
+            // An error occurred, rollback the transaction
+            $conn->rollback();
+            $error_message = "An error occurred: " . $e->getMessage();
+        }
+        
+        $conn->close();
     } else {
         $error_message = "Payment failed. Please try again.";
     }
 }
+
 ?>
 
 <!DOCTYPE html>
