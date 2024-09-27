@@ -1,7 +1,12 @@
 <?php
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Database configuration
 $servername = "localhost";
 $username = "root";
-$password = "";
+$password = "Trubel_@!";
 $dbname = "dairy_products_db";
 
 // Create connection
@@ -15,7 +20,7 @@ if ($conn->connect_error) {
 // Create database if it doesn't exist
 $sql = "CREATE DATABASE IF NOT EXISTS $dbname";
 if ($conn->query($sql) !== TRUE) {
-    echo "Error creating database: " . $conn->error . "<br>";
+    die("Error creating database: " . $conn->error);
 }
 
 // Select the database
@@ -35,7 +40,7 @@ $sql = "CREATE TABLE IF NOT EXISTS products (
 )";
 
 if ($conn->query($sql) !== TRUE) {
-    echo "Error creating products table: " . $conn->error . "<br>";
+    die("Error creating products table: " . $conn->error);
 }
 
 // Create users table
@@ -51,7 +56,7 @@ $sql = "CREATE TABLE IF NOT EXISTS users (
 )";
 
 if ($conn->query($sql) !== TRUE) {
-    echo "Error creating users table: " . $conn->error . "<br>";
+    die("Error creating users table: " . $conn->error);
 }
 
 // Create contact_messages table
@@ -66,7 +71,7 @@ $sql = "CREATE TABLE IF NOT EXISTS contact_messages (
 )";
 
 if ($conn->query($sql) !== TRUE) {
-    echo "Error creating contact_messages table: " . $conn->error . "<br>";
+    die("Error creating contact_messages table: " . $conn->error);
 }
 
 // Function to validate password strength
@@ -78,7 +83,7 @@ function is_password_strong($password) {
             preg_match('/[^A-Za-z0-9]/', $password));
 }
 
-// Sign-up logic
+// Handle sign-up logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
@@ -114,12 +119,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
         $stmt->bind_param("ssss", $first_name, $last_name, $email, $hashed_password);
 
         if ($stmt->execute()) {
-            echo "Sign-up successful. Please sign in.";
             // Redirect to sign-in page
-            header("Location: /templates/html/signin_page.html");
+            header("Location: /templates/db/signin.php");
             exit();
         } else {
-            echo "Error: " . $stmt->error;
+            die("Error: " . $stmt->error);
         }
         $stmt->close();
     } else {
@@ -129,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
     }
 }
 
-// Sign-in logic
+// Handle sign-in logic
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signin'])) {
     $email = trim($_POST['email']);
     $password = $_POST['password'];
@@ -149,7 +153,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signin'])) {
                 session_start();
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['user_role'] = $user['role'];
-                echo "Sign-in successful.";
                 // Redirect based on user role
                 if ($user['role'] == 'admin') {
                     header("Location: /admin/dashboard.php");
@@ -179,11 +182,12 @@ $result = $stmt->get_result();
 if ($result->num_rows == 0) {
     $hashed_password = password_hash($admin_password, PASSWORD_DEFAULT);
     $stmt = $conn->prepare("INSERT INTO users (first_name, last_name, email, password, role) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $first_name, $last_name, $admin_email, $hashed_password, $role);
     
     $first_name = "Admin";
     $last_name = "User";
     $role = "admin";
+    
+    $stmt->bind_param("sssss", $first_name, $last_name, $admin_email, $hashed_password, $role);
     
     if ($stmt->execute()) {
         echo "Admin user created successfully.<br>";
