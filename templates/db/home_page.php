@@ -34,6 +34,7 @@ $berry = $conn->query($strawberry);
 
 </head>
 <body>
+<<<<<<< HEAD
     <!-- Navbar -->
 
     <!-- TODO: Include the nav_bar -->
@@ -52,6 +53,13 @@ $berry = $conn->query($strawberry);
             <li><a href="categories_page.php">Categories</a></li>
             <li><a href="contactme_page.php">Contact Me</a></li>
 
+    <nav class="navbar">
+        <h3>Home</h3>
+        <ul>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contactme_page.php">Contact Me</a></li>
+            <li><a href="categories_page.php">Categories</a></li>
+            <li><a href="products.html">Products</a></li>
         </ul>
 
         <!-- Icons -->

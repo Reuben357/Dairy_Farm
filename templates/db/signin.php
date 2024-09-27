@@ -20,24 +20,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($email) || empty($password)) {
         $error_message = "Both email and password are required.";
     } else {
-        $stmt = $conn->prepare("SELECT id, password FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // Check for admin credentials
+        if ($email === "admin@admin.com" && $password === "Admin123#@!") {
+            $_SESSION['admin_id'] = true; // Set admin session
+            $success_message = "Admin sign-in successful. Redirecting to admin dashboard...";
+            header("Refresh: 1; URL=dashboard.php");
+        } else {
+            // Regular user login process
+            $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE email = ?");
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows == 1) {
-            $user = $result->fetch_assoc();
-            if (password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $success_message = "Sign-in successful. Redirecting to homepage...";
-                header("Refresh: 1; URL=home_page.php");
+            if ($result->num_rows == 1) {
+                $user = $result->fetch_assoc();
+                if (password_verify($password, $user['password'])) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['user_role'] = $user['role'];
+                    $success_message = "Sign-in successful. Redirecting to homepage...";
+                    header("Refresh: 1; URL=home_page.php");
+                } else {
+                    $error_message = "Invalid email or password.";
+                }
             } else {
                 $error_message = "Invalid email or password.";
             }
-        } else {
-            $error_message = "Invalid email or password.";
+            $stmt->close();
         }
-        $stmt->close();
     }
 }
 
