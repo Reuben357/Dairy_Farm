@@ -34,7 +34,6 @@ $berry = $conn->query($strawberry);
 
 </head>
 <body>
-<<<<<<< HEAD
     <!-- Navbar -->
 
     <!-- TODO: Include the nav_bar -->
@@ -52,15 +51,6 @@ $berry = $conn->query($strawberry);
             <li><a href="#new">New</a></li>
             <li><a href="categories_page.php">Categories</a></li>
             <li><a href="contactme_page.php">Contact Me</a></li>
-
-    <nav class="navbar">
-        <h3>Home</h3>
-        <ul>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contactme_page.php">Contact Me</a></li>
-            <li><a href="categories_page.php">Categories</a></li>
-            <li><a href="products.html">Products</a></li>
-        </ul>
 
         <!-- Icons -->
         <div class="nav-icons">
@@ -115,7 +105,7 @@ $berry = $conn->query($strawberry);
                 </div>
                 <?php 
                 if($berry->num_rows > 0) {
-                    while($row = $berry->fetch_assoc()){
+                    while($row = $berry->fetch_assoc()){ 
                     echo "<img src='" .$row["image_url"] ."' alt='" . $row["name"] . "'>";
                     }
                 }
@@ -124,6 +114,8 @@ $berry = $conn->query($strawberry);
             </div>
           </div>
       </section>
+
+      
 
       <!-- Shop -->
        <section class="shop" id="shop">
@@ -135,7 +127,7 @@ $berry = $conn->query($strawberry);
        <div class="shop-container container">
         <?php while($row= $shop_products->fetch_assoc()){ ?>
             <div class="box">
-            <img src="/images/<?php echo $row['image_url']; ?>" alt="product_image">
+            <img src="../images/<?php echo $row['image_url']; ?>" alt="product_image">
             <h2> <?php echo $row['name']; ?></h2>
             <span><?php echo $row['price']; ?></span>
             <a href="<?php echo "products_page.php?id=". $row['id']; ?>"><i class="bx bxs-cart-alt"></i></a>
