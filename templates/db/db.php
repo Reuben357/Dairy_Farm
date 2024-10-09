@@ -1,12 +1,12 @@
 <?php
 // Database configuration
-$host = 'localhost';
+$servername = 'localhost';
 $dbname = 'dairy_products_db';
 $username = 'root';
-$password = 'Trubel_@!';
+$password = '';
 
 // Create connection
-$conn = new mysqli($host, $username, $password, $dbname);
+$conn = new mysqli($servername, $username, $password, $dbname);
 
 // Check connection
 if ($conn->connect_error) {
