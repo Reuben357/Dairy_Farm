@@ -1,4 +1,4 @@
-:root{
+/* :root{
     --main-color: #a8a62d;
     --main-light-color: #c0b15c;
     --container-color: #f8f7fc;
@@ -66,4 +66,99 @@ button:hover {
 .signin-link {
     text-align: center;
     margin-top: 15px;
+} */
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;900&display=swap');
+:root {
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+    --yellow-color: #ffff00;
+    --orange-color: #ffa500;
+    --red-color: #ff0000;
+    --blue-color: #00d3ef;
+}
+
+*{
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+    background: #fffac9 linear-gradient(to right, #e2e2e2, #fffac9);
+
+}
+
+#signup-container {
+    width: 1000px;
+    height: 700px;
+    margin: auto;
+    background-color: var(--bg-color);
+    border-radius: 50px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5vw;
+    padding: 5vh 15px;
+}
+
+#signup-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#signup-info {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+    padding: 10% 5%;
+}
+
+.signup-form h2{
+    text-align: center;
+}
+
+.signup-form h2 span{
+    border-bottom: 3px solid var(--main-color);
+}
+
+.signup-form{
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+    margin-right: 20px;
+}
+
+.signup-form input{
+    height: 45px;
+    width: 100%;
+    outline: none;
+    font-size: 16px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding-left: 15px;
+    border: 1px solid #ccc;
+    border-bottom-width: 2px;
+    transition: all 0.3s ease;
+}
+
+.signup-btn{
+    background-color: var(--main-color);
+    border: 2px solid var(--main-color);
+    margin-right: 8px;
+}
+
+.signup-btn:hover{
+    background-color: var(--container-color);
+    color: var(--main-color);
+}
+
+.signup-form a{
+    text-decoration: none;
+    color: var(--main-color);
+    font-weight: 500;
 }
