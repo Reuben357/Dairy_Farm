@@ -71,31 +71,36 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     <link rel="stylesheet" type="text/css" href="/templates/css/signup_page.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Sign Up</h1>
-        <?php if (!empty($message)): ?>
-            <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
-        <form method="POST" id="signup-form">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <div class="form-group">
-                <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
-            </div>
-            <div class="form-group">
-                <input type="email" class="form-control" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
-                <small class="form-text text-muted">Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.</small>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Sign Up</button>
-        </form>
+    <div id="signup-container">
+        <div id="signup-image">
+            <img src="../images/strawberry.jpg" alt="computer icon">
+        </div>
+        <div id="signup-info">
+            <h1 class="mb-4">Sign Up</h1>
+            <?php if (!empty($message)): ?>
+                <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
+            <?php endif; ?>
+            <form method="POST" id="signup-form">
+                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" class="form-control" name="email" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
+                    <small class="form-text text-muted">Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.</small>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Sign Up</button>
+            </form>
+        </div>
     </div>
 
     <script>

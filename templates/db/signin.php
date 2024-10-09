@@ -63,7 +63,11 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     <link rel="stylesheet" type="text/css" href="/templates/css/signin_page.css">
 </head>
 <body>
-    <div class="container mt-5">
+    <div id="login-container" class="login-container">
+    <div id="login-image">
+        <img src="/templates/images/milk.jpg" alt="computer icon">
+    </div>
+    <div id="login-info" class="login-info">
         <h1 class="mb-4">Sign In</h1>
         <?php if (!empty($message)): ?>
             <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
@@ -78,7 +82,8 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             </div>
             <button type="submit" class="btn btn-primary">Sign In</button>
         </form>
-        <p class="mt-3">Don't have an account? <a href="signup.php">Sign up here</a></p>
+        <p class="login-character">Don't have an account? <a href="signup.php">Sign up here</a></p>
+        </div>
     </div>
 </body>
 </html>
