@@ -67,37 +67,39 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/templates/css/signup_page.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+
+    <!-- Css link -->
+    
+    <link rel="stylesheet" type="text/css" href="../css/signup_page.css">
+
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="mb-4">Sign Up</h1>
-        <?php if (!empty($message)): ?>
-            <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
-        <form method="POST" id="signup-form">
-            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
-            <div class="form-group">
-                <input type="text" class="form-control" name="first_name" placeholder="First Name" required>
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" name="last_name" placeholder="Last Name" required>
-            </div>
-            <div class="form-group">
-                <input type="email" class="form-control" name="email" placeholder="Email" required>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
-                <small class="form-text text-muted">Password must be at least 8 characters long and contain uppercase, lowercase, number, and special character.</small>
-            </div>
-            <div class="form-group">
-                <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Sign Up</button>
-        </form>
+
+<div id="signup-container">
+    <!--    Left side-->
+    <div id="signup-image">
+        <img src="../images/strawberry.jpg" alt="computer icon">
     </div>
 
+    <!--    Right side-->
+    <div id="signup-info">
+        <form action="" method="POST" class="signup-form">
+            <h2>Create An <span>Account</span></h2>
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'];?>">
+            <input type="text" placeholder="First Name" class="user-name" name="first_name"><br>
+            <input type="text" placeholder="Last Name" class="user-name" name="last_name"><br>
+            <input type="email" placeholder="Email" class="user-email" name="email"><br>
+            <input type="password" placeholder="Password" id="password" class="user-password" name="password"><br>
+            <input type="password" placeholder="Confirm password" class="confirm-password"
+                   name="confirm_password"><br>
+            <input type="submit" name="signup_submit" class="signup-btn" value="Sign Up"><br>
+            <p>Already have an Account? <a href="signin.php"> Click to Login</a> </p>
+        </form>
+    </div>
+</div>
+
+   
     <script>
     document.getElementById('signup-form').addEventListener('submit', function(e) {
         var password = document.getElementById('password').value;
