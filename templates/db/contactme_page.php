@@ -77,12 +77,42 @@ function test_input($data) {
     <title>Contact Me</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../css/contactme_page.css">
+
+    <link rel="stylesheet" href="../css/home_page.css">
+
     <style>
         .error {color: #FF0000;}
         .success-message {color: #4CAF50; margin-bottom: 20px;}
     </style>
 </head>
 <body>
+
+<header>
+        <div class="nav container">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <img src="" alt="">
+            </a>
+
+            <!-- Nav Links -->
+            <ul class="navbar">
+                <li><a href="home_page.php" class="active">Home</a></li>
+                <li><a href="#featured">Featured</a></li>
+                <li><a href="category_products.php">Categories</a></li>
+                <li><a href="contactme_page.php">Contact Me</a></li>
+            </ul>
+
+            <!-- Icons -->
+            <div class="nav-icons">
+                <!-- Account and Cart -->
+                <a href="account_page.php" class="user"><i class="bx bxs-user"></i></a>
+                <a href="cart_page.php" class="navbar-cart" id="cartPage"><i class="bx bxs-cart"></i></a>
+                <i class="bx bx-menu" id="menu-icon"></i>
+            </div>
+        </div>
+    </header>
+
+
     <div class="container">
         <h1>Get in Touch</h1>
         

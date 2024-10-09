@@ -35,6 +35,8 @@ if ($selected_category) {
     <link rel="stylesheet" type="text/css" href="../css/category_products.css">
 </head>
 <body>
+
+
     <!-- Sidebar for Categories -->
     <nav class="sidebar">
         <h5 class="text-center">Categories</h5>
