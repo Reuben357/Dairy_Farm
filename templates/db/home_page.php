@@ -49,7 +49,7 @@ $berry = $conn->query($strawberry);
             <li><a href="home_page.php" class="active">Home</a></li>
             <li><a href="#featured">Featured</a></li>
             <li><a href="#new">New</a></li>
-            <li><a href="categories_page.php">Categories</a></li>
+            <li><a href="category_products.php">Categories</a></li>
             <li><a href="contactme_page.php">Contact Me</a></li>
 
         <!-- Icons -->
