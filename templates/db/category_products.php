@@ -32,9 +32,11 @@ if ($selected_category) {
     <title>Categories</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/templates/css/category_products.css">
+    <link rel="stylesheet" type="text/css" href="../css/category_products.css">
 </head>
 <body>
+
+
     <!-- Sidebar for Categories -->
     <nav class="sidebar">
         <h5 class="text-center">Categories</h5>
