@@ -105,7 +105,7 @@ if ($result) {
                 <h2 class="mt-5">Categories</h2>
                 <div class="mb-3">
                     <?php foreach ($categories as $category): ?>
-                        <a href="category_products.php?category=<?php echo urlencode($category); ?>" class="btn btn-outline-primary mr-2 mb-2"><?php echo htmlspecialchars($category); ?></a>
+                        <a href="admin_category_products.php?category=<?php echo urlencode($category); ?>" class="btn btn-outline-primary mr-2 mb-2"><?php echo htmlspecialchars($category); ?></a>
                     <?php endforeach; ?>
                 </div>
 

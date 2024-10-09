@@ -1,0 +1,46 @@
+        /* Custom CSS for sidebar and product grid */
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+        .sidebar .nav-link {
+            color: #333;
+        }
+        .sidebar .nav-link.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .content {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+        .product-grid {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .product-card {
+            margin: 10px;
+            flex: 1 1 calc(25% - 20px); /* Four items per row */
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            .product-card {
+                flex: 1 1 calc(50% - 20px); /* Two items per row on small screens */
+            }
+            .content {
+                margin-left: 0;
+            }
+            .sidebar {
+                display: none; /* Hide sidebar on small screens */
+            }
+        }
