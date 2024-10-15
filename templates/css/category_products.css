@@ -1,3 +1,10 @@
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+}
         /* Custom CSS for sidebar and product grid */
         body {
             display: flex;
@@ -27,6 +34,17 @@
             display: flex;
             flex-wrap: wrap;
             margin-top: 20px;
+        }
+        .cart-btn {
+            color: var(--main-color);
+            padding: 13px 26px;
+            background: var(--main-color);
+            color: var(--bg-color);
+            font-weight: 400;
+            border-radius: 0.5rem;
+        }
+        .nav-link {
+            color: (--main-color)
         }
         .product-card {
             margin: 10px;

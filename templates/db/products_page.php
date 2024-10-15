@@ -91,6 +91,62 @@ $conn->close();
     <link rel="stylesheet" type="text/css" href="products_page.css">
 </head>
 <body>
+
+<style>
+    
+        /* Variables */
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+}
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+.logo img{
+    width: 70px;
+}
+.navbar{
+    display: flex;
+    column-gap: 2rem;
+    padding-left: 30%;
+}
+
+.navbar a{
+    position: relative;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s linear;
+    text-decoration: none;
+
+}
+.navbar a:hover,
+.navbar .active {
+    color: var(--main-color);
+}
+
+    </style>
+</style>
+
+<header>
+        <div class="nav container">
+            <!-- Nav Links -->
+            <ul class="navbar">
+                <a href="home_page.php" class="active">Home</a>
+                <a href="category_products.php">Categories</a>
+                <a href="contactme_page.php">Contact Me</a>
+            </ul>
+        </div>
+    </header>
+
+    <section style="padding-left: 50px; padding-right:50px;">
+         
     <section class="product">
         <div class="product-container">
             <div class="product-image">
@@ -110,10 +166,6 @@ $conn->close();
                             <i class="fas fa-shopping-cart"></i>
                             add to cart
                         </button>
-                        <button class="buy-now-btn">
-                            <i class="fas fa-wallet"></i>
-                            buy now
-                        </button>
                     </div>
                 </form>
             </div>
@@ -125,14 +177,16 @@ $conn->close();
         <div class="product-grid">
             <?php foreach ($all_products as $product): ?>
                 <div class="product-item">
-                    <a href="?id=<?php echo $product['id']; ?>">
+                    <a  style="text-decoration: none; color: #000;" href="?id=<?php echo $product['id']; ?>" >
                         <img src="<?php echo $product['image_url']; ?>" alt="<?php echo $product['name']; ?>">
                         <h4><?php echo $product['name']; ?></h4>
-                        <p>Ksh <?php echo $product['price']; ?>/=</p>
+                        <p style="color: #000;">Ksh <?php echo $product['price']; ?>/=</p>
                     </a>
                 </div>
             <?php endforeach; ?>
         </div>
+    </section>
+
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

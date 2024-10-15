@@ -4,8 +4,12 @@ session_start();
 
 $message = "";
 
+if (isset($_SESSION['user_id'])) {
+    header("Location: home_page.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // CSRF protection
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         die("CSRF token validation failed");
     }
@@ -16,10 +20,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($email) || empty($password)) {
         $message = "Both email and password are required.";
     } else {
-        // Check for admin login
         if ($email === 'admin@admin.com' && $password === 'Admin123@!') {
             $_SESSION['user_id'] = 'admin';
             $_SESSION['user_role'] = 'admin';
+            $_SESSION['last_activity'] = time();
             header("Location: admin_dashboard.php");
             exit();
         } else {
@@ -34,9 +38,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 if (password_verify($password, $user['password'])) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['user_role'] = $user['role'];
-                    $message = "Sign-in successful.";
-                    // Redirect to home page
-                    header("Location: home_page.php");
+                    $_SESSION['last_activity'] = time();
+
+                    // Check if the user is a farmer based on email
+                    if (strpos($email, '.farmer@gmail.com') !== false) {
+                        // Redirect to the farmers dashboard
+                        header("Location: farmers_dashboard.php");
+                    } else {
+                        // Redirect to the general home page
+                        header("Location: signin.php");
+                    }
                     exit();
                 } else {
                     $message = "Invalid email or password.";
@@ -49,7 +60,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Generate CSRF token
 $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 ?>
 
@@ -59,38 +69,25 @@ $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign In</title>
-
-     <!--    Css link-->
-     <link rel="stylesheet" href="../css/signin_page.css">
-
-<!-- Box Icons -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/templates/css/signin_page.css">
+    <link rel="stylesheet" href="../css/signin_page.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 </head>
 <body>
-
 <div id="login-container" class="login-container">
-<!--    Left side-->
     <div id="login-image">
-        <img src="../images/watermelon.jpg" alt="computer icon">
+        <img src="../images/bottled milk.png" alt="computer icon">
     </div>
-
-<!--    Right side-->
     <div id="login-info" class="login-info">
         <form action="" method="POST" class="login-form">
-
-        <?php if (!empty($message)): ?>
-            <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
-        <?php endif; ?>
-        
+            <?php if (!empty($message)): ?>
+                <div class="alert alert-info"><?php echo htmlspecialchars($message); ?></div>
+            <?php endif; ?>
             <h2>Welcome <span>Back</span></h2>
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'];?>">
-            <input type="email" placeholder="Email" class="user-name" name="email"><br>
-            <input type="password" placeholder="Password" class="user-password" name="password"><br>
+            <input type="email" placeholder="Email" class="user-name" name="email" required><br>
+            <input type="password" placeholder="Password" class="user-password" name="password" required><br>
             <input type="submit" value="Login" name="login_btn" class="login-btn"><br>
-            <p>Not registered yet? <a href="signup.php"> Create an Account</a> </p>
+            <p>Not registered yet? <a href="signup.php">Create an Account</a></p>
         </form>
     </div>
 </div>

@@ -78,37 +78,59 @@ function test_input($data) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="../css/contactme_page.css">
 
-    <link rel="stylesheet" href="../css/home_page.css">
-
     <style>
         .error {color: #FF0000;}
         .success-message {color: #4CAF50; margin-bottom: 20px;}
+
+        /* Variables */
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+}
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+.logo img{
+    width: 70px;
+}
+.navbar{
+    display: flex;
+    column-gap: 2rem;
+    padding-left: 30%;
+}
+
+.navbar a{
+    position: relative;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s linear;
+    text-decoration: none;
+
+}
+.navbar a:hover,
+.navbar .active {
+    color: var(--main-color);
+}
+
     </style>
 </head>
 <body>
 
 <header>
         <div class="nav container">
-            <!-- Logo -->
-            <a href="#" class="logo">
-                <img src="" alt="">
-            </a>
-
             <!-- Nav Links -->
             <ul class="navbar">
-                <li><a href="home_page.php" class="active">Home</a></li>
-                <li><a href="#featured">Featured</a></li>
-                <li><a href="category_products.php">Categories</a></li>
-                <li><a href="contactme_page.php">Contact Me</a></li>
+                <a href="home_page.php" class="active">Home</a>
+                <a href="category_products.php">Categories</a>
+                <a href="contactme_page.php">Contact Me</a>
             </ul>
-
-            <!-- Icons -->
-            <div class="nav-icons">
-                <!-- Account and Cart -->
-                <a href="account_page.php" class="user"><i class="bx bxs-user"></i></a>
-                <a href="cart_page.php" class="navbar-cart" id="cartPage"><i class="bx bxs-cart"></i></a>
-                <i class="bx bx-menu" id="menu-icon"></i>
-            </div>
         </div>
     </header>
 

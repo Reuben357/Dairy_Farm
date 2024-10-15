@@ -2,7 +2,7 @@
 session_start();
 
 // Check if user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'farmer') {
     header("Location: signin.php");
     exit();
 }
@@ -50,7 +50,7 @@ if ($result) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Farmers Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
@@ -88,31 +88,15 @@ if ($result) {
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </li>
-                        <li class="nav-item">
-                        <a class="nav-link" href="admin_transactions.php">
-                            <i class="fas fa-exchange-alt"></i> See All Customers
-                        </a>
-                    </li>
                     </ul>
                 </div>
             </nav>
 
             <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Admin Dashboard</h1>
+                    <h1 class="h2">Farmers Dashboard</h1>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">Total Users</h5>
-                                <p class="card-text"><?php echo $total_users; ?></p>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Add more dashboard widgets here -->
-                </div>
 
                 <h2 class="mt-5">Categories</h2>
                 <div class="mb-3">

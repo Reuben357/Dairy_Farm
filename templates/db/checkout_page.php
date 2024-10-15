@@ -67,8 +67,62 @@ if (isset($_POST['pay'])) {
     <title>Checkout</title>
     <link rel="stylesheet" href="/templates/css/checkout_page.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    
 </head>
+
+<style>
+    /* Variables */
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+}
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+.logo img{
+    width: 70px;
+}
+.navbar{
+    display: flex;
+    column-gap: 2rem;
+    padding-left: 30%;
+}
+
+.navbar a{
+    position: relative;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s linear;
+    text-decoration: none;
+
+}
+.navbar a:hover,
+.navbar .active {
+    color: var(--main-color);
+}
+</style>
 <body>
+
+<header>
+        <div class="nav container">
+            <!-- Nav Links -->
+            <ul class="navbar">
+                <a href="home_page.php" class="active">Home</a>
+                <a href="category_products.php">Categories</a>
+                <a href="contactme_page.php">Contact Me</a>
+            </ul>
+
+           
+        </div>
+    </header>
+
     <section class="checkout container">
         <h2>Checkout</h2>
         <hr>

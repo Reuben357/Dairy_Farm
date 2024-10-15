@@ -1,8 +1,8 @@
 <?php
 session_start();
 
-// Check if user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
+// Check if user is logged in and is a farmer
+if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'farmer') {
     header("Location: signin.php");
     exit();
 }
@@ -17,6 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $description = trim($_POST['description']);
     $category = $_POST['category'];
     $quantity = intval($_POST['quantity']);
+    $farmer_id = $_SESSION['user_id']; // Get the farmer's ID from the session
 
     // Handle file upload
     $image_url = '';
@@ -50,16 +51,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($message)) {
         $conn = getDbConnection();
-        $stmt = $conn->prepare("INSERT INTO products (name, price, description, image_url, category, quantity) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param("sdsssi", $name, $price, $description, $image_url, $category, $quantity);
+        
+        // Start transaction
+        $conn->begin_transaction();
 
-        if ($stmt->execute()) {
-            $message = "Product added successfully.";
-        } else {
-            $message = "Error: " . $stmt->error;
+        try {
+            // First, ensure the farmer exists in the farmers table
+            $stmt = $conn->prepare("INSERT IGNORE INTO farmers (id, first_name, last_name, email) SELECT id, first_name, last_name, email FROM users WHERE id = ?");
+            $stmt->bind_param("i", $farmer_id);
+            $stmt->execute();
+            $stmt->close();
+
+            // Now insert the product
+            $stmt = $conn->prepare("INSERT INTO products (name, price, description, image_url, category, quantity, farmer_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bind_param("sdsssii", $name, $price, $description, $image_url, $category, $quantity, $farmer_id);
+
+            if ($stmt->execute()) {
+                // Commit transaction
+                $conn->commit();
+                $message = "Product added successfully.";
+            } else {
+                throw new Exception("Error executing product insert: " . $stmt->error);
+            }
+
+            $stmt->close();
+        } catch (Exception $e) {
+            // An error occurred, rollback the transaction
+            $conn->rollback();
+            $message = "Error: " . $e->getMessage();
         }
 
-        $stmt->close();
+        $conn->close();
     }
 }
 ?>
@@ -110,7 +132,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="number" class="form-control" id="quantity" name="quantity" required>
             </div>
             <button type="submit" class="btn btn-primary">Add Product</button>
-            <a href="admin_dashboard.php" class="btn btn-secondary mb-3">Back to Dashboard</a>
+            <a href="farmers_dashboard.php" class="btn btn-secondary mb-3">Back to Dashboard</a>
         </form>
     </div>
 

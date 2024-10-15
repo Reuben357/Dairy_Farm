@@ -1,14 +1,26 @@
 <?php
 session_start();
 
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: signin.php");
+    exit();
+}
+
+// Check session timeout (30 minutes)
+if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > 1800)) {
+    session_unset();
+    session_destroy();
+    header("Location: signin.php");
+    exit();
+}
+$_SESSION['last_activity'] = time();
+
 // Handle remove product
 if (isset($_POST['remove_product'])) {
     $product_id = $_POST['product_id'];
-    foreach ($_SESSION['cart'] as $key => $item) {
-        if ($item['id'] == $product_id) {
-            unset($_SESSION['cart'][$key]);
-            break;
-        }
+    if (isset($_SESSION['cart'][$product_id])) {
+        unset($_SESSION['cart'][$product_id]);
     }
 }
 
@@ -16,11 +28,8 @@ if (isset($_POST['remove_product'])) {
 if (isset($_POST['edit_quantity'])) {
     $product_id = $_POST['product_id'];
     $new_quantity = $_POST['product_quantity'];
-    foreach ($_SESSION['cart'] as &$item) {
-        if ($item['id'] == $product_id) {
-            $item['quantity'] = $new_quantity;
-            break;
-        }
+    if (isset($_SESSION['cart'][$product_id])) {
+        $_SESSION['cart'][$product_id]['quantity'] = $new_quantity;
     }
 }
 
@@ -39,16 +48,84 @@ if (isset($_SESSION['cart'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Cart</title>
-    <link rel="stylesheet" href="/templates/css/cart_page.css">
+    <link rel="stylesheet" href="../css/cart_page.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
+    <style>
+     /* Variables */
+:root{
+    --main-color: #a8a62d;
+    --main-light-color: #c0b15c;
+    --container-color: #f8f7fc;
+    --text-color: #1a1d22;
+    --bg-color: #fff;
+}
+.nav{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+}
+.logo img{
+    width: 70px;
+}
+.navbar{
+    display: flex;
+    column-gap: 2rem;
+
+}
+
+.navbar a{
+    position: relative;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s linear;
+    text-decoration: none;
+
+}
+.navbar a:hover,
+.navbar .active {
+    color: var(--main-color);
+}
+
+
+
+
+    </style>
+
 <body>
+
+
+<header>
+        <div class="nav container">
+            <!-- Logo -->
+            <a href="#" class="logo">
+                <img src="" alt="">
+            </a>
+
+            <!-- Nav Links -->
+            <ul class="navbar">
+                <li><a href="home_page.php" class="active">Home</a></li>
+                <li><a href="category_products.php">Categories</a></li>
+                <li><a href="contactme_page.php">Contact Me</a></li>
+            </ul>
+
+            <!-- Icons -->
+            <div class="nav-icons">
+                <!-- Account and Cart -->
+                <a href="cart_page.php" class="navbar-cart" id="cartPage"><i class="bx bxs-cart"></i></a>
+                <i class="bx bx-menu" id="menu-icon"></i>
+            </div>
+        </div>
+    </header>
+
     <section class="cart container">
         <div class="container">
             <h2>Your Cart</h2>
             <hr>
         </div>
-
+ 
         <table class="cart-table">
             <tr>
                 <th>Product</th>
@@ -105,9 +182,9 @@ if (isset($_SESSION['cart'])) {
         </div>
 
         <div class="action-buttons">
-            <a href="home_page.php" class="btn btn-primary">Continue Shopping</a>
+            <a href="home_page.php" class="shopping-btn" style="text-decoration: none;">Continue Shopping</a>
             <form action="checkout_page.php" method="POST" style="display: inline;">
-                <input type="submit" class="btn btn-success" value="Checkout" name="checkout">
+                <input type="submit" class="checkout-btn" value="Checkout" name="checkout">
             </form>
         </div>
     </section>
