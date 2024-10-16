@@ -94,7 +94,7 @@ $dairy = $conn->query($stmt);
     <section class="home" id="home">
         <div class="home-container container">
             <div class="home-text">
-                <h1>Dairy Farm</h1>
+                <h1>Dairy Farm Management System</h1>
                 <p>Your one-stop shop for all your animal needs. Find a wide variety of quality animal products, from feed and supplies to health care and accessories.</p>
 
                 <!-- Home Button -->
